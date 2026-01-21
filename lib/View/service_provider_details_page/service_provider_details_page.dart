@@ -460,17 +460,7 @@ class ServiceProviderDetailsPage extends StatelessWidget {
                           letterSpacing: -0.5,
                         ),
                       ),
-                      // const Padding(
-                      //   padding: EdgeInsets.only(bottom: 4, left: 4),
-                      //   child: Text(
-                      //     '/hour',
-                      //     style: TextStyle(
-                      //       fontSize: 14,
-                      //       color: Color(0xFF6B7280),
-                      //       fontWeight: FontWeight.w600,
-                      //     ),
-                      //   ),
-                      // ),
+      
                     ],
                   ),
                 ],
@@ -490,66 +480,6 @@ class ServiceProviderDetailsPage extends StatelessWidget {
               width: 200,
               borderRadius: 12,
             ),
-
-            // Expanded(
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       gradient: LinearGradient(
-            //         colors: [
-            //           AppColors.primary,
-            //           AppColors.primary.withOpacity(0.8),
-            //         ],
-            //         begin: Alignment.topLeft,
-            //         end: Alignment.bottomRight,
-            //       ),
-            //       borderRadius: BorderRadius.circular(16),
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: AppColors.primary.withOpacity(0.4),
-            //           blurRadius: 12,
-            //           offset: const Offset(0, 6),
-            //         ),
-            //       ],
-            //     ),
-            //     child: Material(
-            //       color: Colors.transparent,
-            //       child: InkWell(
-            //         onTap: () {
-            //           Navigator.push(
-            //             context,
-            //             MaterialPageRoute(
-            //               builder: (context) => BookingRequestFormPage(provider: provider),
-            //             ),
-            //           );
-            //         },
-            //         borderRadius: BorderRadius.circular(16),
-            //         child: Container(
-            //           padding: const EdgeInsets.symmetric(vertical: 16),
-            //           child: const Row(
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             children: [
-            //               Icon(
-            //                 Icons.calendar_today_rounded,
-            //                 size: 18,
-            //                 color: Colors.white,
-            //               ),
-            //               SizedBox(width: 8),
-            //               Text(
-            //                 'Book Now',
-            //                 style: TextStyle(
-            //                   fontSize: 16,
-            //                   fontWeight: FontWeight.w700,
-            //                   color: Colors.white,
-            //                   letterSpacing: 0.5,
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -663,18 +593,6 @@ class ServiceProviderDetailsPage extends StatelessWidget {
                 );
               },
             ),
-            // Container(
-              // decoration: BoxDecoration(
-                // gradient: LinearGradient(
-                //   begin: Alignment.topCenter,
-                //   end: Alignment.bottomCenter,
-                //   colors: [
-                //     Colors.transparent,
-                //     Colors.black.withOpacity(0.7),
-                //   ],
-                // ),
-              // ),
-            // ),
           ],
         ),
       ),

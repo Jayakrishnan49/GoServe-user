@@ -16,4 +16,9 @@ class AppColors {
   ///////////
   
   static const Color rejected=Colors.red;
+  static const Color info=Colors.blue;
+
+  //////
+  
+  static const Color rating=Color.fromARGB(255, 255, 183, 0);
 }

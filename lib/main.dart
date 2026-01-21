@@ -62,6 +62,7 @@ import 'package:project_2/controllers/auth_provider/auth_provider.dart';
 import 'package:project_2/controllers/booking_provider/booking_request_provider.dart';
 import 'package:project_2/controllers/browse_all_category_provider/browse_all_category_provider.dart';
 import 'package:project_2/controllers/custom_textform_field_provider/custom_text_form_field_provider.dart';
+import 'package:project_2/controllers/rating_provider/rating_provider.dart';
 import 'package:project_2/controllers/search_filter_provider/filter_provider.dart';
 import 'package:project_2/controllers/search_filter_provider/search_provider.dart';
 import 'package:project_2/controllers/service_provider_details_provider/service_provider_details_provider.dart';
@@ -83,10 +84,13 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => RatingProvider()),
         ChangeNotifierProvider(create: (_) => CustomTextFormFieldProvider()),
         ChangeNotifierProvider(create: (_) => UserAuthProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
