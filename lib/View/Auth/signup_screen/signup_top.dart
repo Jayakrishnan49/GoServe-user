@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_2/constants/app_color.dart';
 
 class SignupTop extends StatelessWidget {
@@ -12,14 +13,15 @@ class SignupTop extends StatelessWidget {
         CircleAvatar(
           radius: 50,
           backgroundColor: AppColors.primary,
-          child: Icon(Icons.person_outline_outlined,color: AppColors.secondary,size: 50,),
+          // child: Icon(Icons.person,color: AppColors.secondary,size: 50,),
+          child: Icon(FontAwesomeIcons.user,color: AppColors.secondary,size: 40,),
         ),
         SizedBox(height: 20,),
         Text(
           'Hello User !',
           style: TextStyle(
-            color: AppColors.primary,
-            fontSize: 30,
+            color: const Color.fromARGB(255, 14, 93, 139),
+            fontSize: 35,
             fontWeight: FontWeight.bold,
             fontFamily: 'DancingScript',
           ),

@@ -34,6 +34,24 @@ class RatingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String userId = FirebaseAuth.instance.currentUser!.uid;
 
+
+  Stream<QuerySnapshot> getProviderRatings(String providerId) {
+    return _firestore
+      .collection('ratings')
+      .where('providerId', isEqualTo: providerId)
+      .snapshots();
+  }
+
+
+  Stream<QuerySnapshot> getProviderReviews(String providerId) {
+  return _firestore
+      .collection('ratings')
+      .where('providerId', isEqualTo: providerId)
+      .orderBy('createdAt', descending: true)
+      .snapshots();
+}
+
+
   Future<void> submitRating({
     required double rating,
     required String review,

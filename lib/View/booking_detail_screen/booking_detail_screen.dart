@@ -3,13 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_2/constants/app_color.dart';
-import 'package:project_2/model/service_model.dart';
+import 'package:project_2/services/booking_service.dart';
 import 'package:project_2/services/payment_service.dart';
-import 'package:project_2/view/payment_screen/payment_screen.dart';
+import 'package:project_2/services/receipt_service.dart';
+// import 'package:project_2/services/receipt_service.dart' as ReceiptService;
 import 'package:project_2/view/rating_page/rating_page.dart';
 import 'package:project_2/view/service_provider_details_page/provider_details_loader_page.dart';
-import 'package:project_2/view/service_provider_details_page/service_provider_details_page.dart';
 import 'package:project_2/widgets/custom_button.dart';
+import 'package:project_2/widgets/custom_modern_snackbar.dart';
+import 'package:project_2/widgets/custom_show_dialog.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class BookingDetailScreen extends StatelessWidget {
   final Map<String, dynamic> booking;
@@ -91,18 +96,18 @@ class BookingDetailScreen extends StatelessWidget {
     return booking['workStartTime'] != null && booking['workEndTime'] == null;
   }
 
-  bool get _isWorkCompleted {
-    return booking['workEndTime'] != null;
-  }
+  // bool get _isWorkCompleted {
+  //   return booking['workEndTime'] != null;
+  // }
 
   @override
   Widget build(BuildContext context) {
     final imageUrls = booking['imageUrls'] as List<dynamic>? ?? [];
     final notes = booking['notes'] as String? ?? '';
-    final responseTimeMinutes = booking['responseTimeMinutes'] as int?;
+    // final responseTimeMinutes = booking['responseTimeMinutes'] as int?;
     final address = booking['address'] as String? ?? '';
-    final requestSentAt = booking['requestSentAt'];
-    final responseAt = booking['responseAt'];
+    // final requestSentAt = booking['requestSentAt'];
+    // final responseAt = booking['responseAt'];
     final rejectionReason = booking['rejectionReason'] as String?;
     final workStartTime = booking['workStartTime'];
     final workEndTime = booking['workEndTime'];
@@ -643,10 +648,29 @@ class BookingDetailScreen extends StatelessWidget {
                         child: CustomButton(
                           borderColor: AppColors.buttonColor,
                           text: 'Call',
-                          onTap: () {
-                            // Handle call
-
-                          },
+                          onTap: () async {
+  final phone = booking['phoneNumber'];
+  if (phone != null && phone.toString().isNotEmpty) {
+    final uri = Uri(scheme: 'tel', path: phone.toString());
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      ModernSnackBar.show(
+        context: context,
+        title: 'Error',
+        message: 'Could not launch phone dialer',
+        type: SnackBarType.error,
+      );
+    }
+  } else {
+    ModernSnackBar.show(
+      context: context,
+      title: 'No Number',
+      message: 'Provider phone number not available',
+      type: SnackBarType.error,
+    );
+  }
+},
                           height: 50,
                           borderRadius: 10,
                           icon: const Icon(Icons.phone, size: 18),
@@ -673,7 +697,7 @@ class BookingDetailScreen extends StatelessWidget {
                           borderColor: AppColors.buttonColor,
                           height: 50,
                           borderRadius: 10,
-                          icon: const Icon(Icons.star, size: 18),
+                          icon: const Icon(Icons.star, size: 18,color: AppColors.rating,),
                         ),
                       ),
                     ],
@@ -808,16 +832,26 @@ if (status.toLowerCase() == 'completed' && booking['paymentStatus'] == 'paid') .
         ],
         
         const SizedBox(height: 20),
-        
-        // Download Receipt Button (Optional)
-        OutlinedButton.icon(
-          onPressed: () {
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            OutlinedButton.icon(
+          onPressed: () async{
+              final file = await ReceiptService.generateReceipt(booking);
+              await ReceiptService.saveToDownloads(file);
+            // await ReceiptService.generateReceipt(booking);
             // Handle download receipt
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Receipt download feature coming soon'),
-                backgroundColor: Color(0xFF4CAF50),
-              ),
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   const SnackBar(
+            //     content: Text('Receipt downloaded'),
+            //     backgroundColor: Color(0xFF4CAF50),
+            //   ),
+            // );
+            ModernSnackBar.show(
+              context: context,
+              title: 'Download Complete ✅',
+              message: 'Your receipt has been downloaded successfully.',
+              type: SnackBarType.success,
             );
           },
           icon: const Icon(Icons.download, size: 18),
@@ -831,6 +865,31 @@ if (status.toLowerCase() == 'completed' && booking['paymentStatus'] == 'paid') .
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           ),
         ),
+
+      /////   share button
+      
+      OutlinedButton.icon(
+  onPressed: () async {
+    final file = await ReceiptService.generateReceipt(booking);
+
+    await Share.shareXFiles([XFile(file.path)]);
+  },
+  icon: const Icon(Icons.share),
+  label: const Text('Share'),
+  style: OutlinedButton.styleFrom(
+            foregroundColor: const Color(0xFF4CAF50),
+            side: const BorderSide(color: Color(0xFF4CAF50)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          ),
+)
+
+          ],
+        )
+        // Download Receipt Button (Optional)
+        
       ],
     ),
   ),
@@ -844,11 +903,134 @@ if (status.toLowerCase() == 'completed' && booking['paymentStatus'] == 'paid') .
         ),
       ),
       // ✅ NEW: Bottom Navigation Bar for Payment
-    bottomNavigationBar: status.toLowerCase() == 'completed'&&booking['paymentStatus']==null
-        ? _buildPaymentBottomBar(context, totalAmount)
+    // bottomNavigationBar: status.toLowerCase() == 'completed'&&booking['paymentStatus']==null
+    //     ? _buildPaymentBottomBar(context, totalAmount)
+    //     : null,
+    bottomNavigationBar: status.toLowerCase() == 'completed' && booking['paymentStatus'] == null
+    ? _buildPaymentBottomBar(context, totalAmount)
+    : status.toLowerCase() == 'pending'
+        ? _buildCancelBottomBar(context)
         : null,
     );
   }
+
+
+Widget _buildCancelBottomBar(BuildContext context) {
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 10,
+          offset: const Offset(0, -3),
+        ),
+      ],
+    ),
+    child: SafeArea(
+      child: CustomButton(
+        text: 'Cancel Booking',
+        width: double.infinity,
+        height: 54,
+        borderRadius: 12,
+        color: Colors.red.shade50,
+        textColor: Colors.red,
+        borderColor: Colors.red,
+        icon: const Icon(Icons.cancel_outlined, size: 20, color: Colors.red),
+        onTap: () => _showCancelConfirmDialog(context),
+      ),
+    ),
+  );
+}
+
+
+void _showCancelConfirmDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (_) => CustomShowDialog(
+      title: 'Cancel Booking?',
+      subTitle: 'Are you sure you want to cancel this booking? This action cannot be undone.',
+      animationPath: 'assets/animations/Recycling Bin (2).json', 
+      buttonLeft: 'Keep',
+      buttonRight: 'Yes, Cancel',
+      onTap: () {
+        Navigator.pop(context); // close dialog
+        _cancelBooking(context);
+      },
+    ),
+  );
+}
+
+Future<void> _cancelBooking(BuildContext context) async {
+  // Navigator.pop(context); 
+
+  // Show loading
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const Center(
+      child: CircularProgressIndicator(color: AppColors.primary),
+    ),
+  );
+
+  try {
+    await BookingService().cancelBooking(
+      bookingId: booking['id'],
+      providerId: booking['providerId'],
+      userId: booking['userId'],
+    );
+
+    if (context.mounted) Navigator.pop(context); // close loader
+
+    if (context.mounted) {
+      Navigator.pop(context); // go back to bookings list
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: const Row(
+      //       children: [
+      //         Icon(Icons.check_circle, color: Colors.white),
+      //         SizedBox(width: 10),
+      //         Text('Booking cancelled successfully'),
+      //       ],
+      //     ),
+      //     backgroundColor: Colors.green,
+      //     behavior: SnackBarBehavior.floating,
+      //     shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.circular(10),
+      //     ),
+      //   ),
+      // );
+      ModernSnackBar.show(
+        context: context,
+        title: 'Booking cancelled',
+        message: 'Booking cancelled successfully',
+        type: SnackBarType.success
+      );
+    }
+  } catch (e) {
+    if (context.mounted) Navigator.pop(context); // close loader
+
+    if (context.mounted) {
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: const Text('Failed to cancel booking. Please try again.'),
+      //     backgroundColor: Colors.red,
+      //     behavior: SnackBarBehavior.floating,
+      //     shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.circular(10),
+      //     ),
+      //   ),
+      // );
+      ModernSnackBar.show(
+        context: context,
+        title: 'Failed',
+        message: 'Failed to cancel booking. Please try again.',
+        type: SnackBarType.error
+      );
+    }
+  }
+}
 
 
 // ✅ Helper: Payment Info Row

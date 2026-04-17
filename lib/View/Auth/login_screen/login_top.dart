@@ -11,8 +11,8 @@ class LoginTop extends StatelessWidget {
         SizedBox(height: 60,),
         Text('Login',
           style: TextStyle(
-          color: AppColors.primary,
-          fontSize: 30,
+          color: const Color.fromARGB(255, 14, 93, 139),
+          fontSize: 40,
           fontWeight: FontWeight.bold,
           fontFamily: 'DancingScript',
           ),
@@ -21,13 +21,13 @@ class LoginTop extends StatelessWidget {
         Text('You have been missed !!',
         textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 20,
               fontWeight: FontWeight.w500,
               color: AppColors.grey,
               fontFamily: 'DancingScript',
             ),
         ),
-        SizedBox(height: 30,)
+        SizedBox(height: 40,)
       ],
     );
   }

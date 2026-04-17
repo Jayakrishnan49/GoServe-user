@@ -36,27 +36,30 @@ class SearchResults extends StatelessWidget {
   Widget _buildProvidersOnly(BuildContext context) {
     if (filteredProviders.isEmpty) {
       return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.person_off, size: 64, color: Colors.grey[300]),
-            const SizedBox(height: 16),
-            Text(
-              'No service providers found',
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColors.textColor.withOpacity(0.6),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Icon(Icons.person_off, size: 64, color: Colors.grey[300]),
+              Image.asset('assets/icons/worker_not_available.png',width: 300,),
+              const SizedBox(height: 16),
+              Text(
+                'No service providers found',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textColor,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Try adjusting your filters',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textColor.withOpacity(0.4),
+              const SizedBox(height: 8),
+              Text(
+                'Try adjusting your filters',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textColor.withOpacity(0.4),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
@@ -82,20 +85,26 @@ class SearchResults extends StatelessWidget {
     final hasResults = filteredCategories.isNotEmpty || filteredProviders.isNotEmpty;
 
     if (!hasResults) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.search_off, size: 64, color: Colors.grey[300]),
-            const SizedBox(height: 16),
-            Text(
-              'No results found',
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColors.textColor.withOpacity(0.6),
+      return SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Icon(Icons.search_off, size: 64, color: Colors.grey[300]),
+              Image.asset('assets/search/no_search_result.png',width: 300,
+              // height: 500,
+                fit: BoxFit.fill,
               ),
-            ),
-          ],
+              // const SizedBox(height: 16),
+              Text(
+                'No results found',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textColor.withOpacity(0.8),
+                ),
+              ),
+            ],
+          ),
         ),
       );
     }

@@ -112,6 +112,7 @@ class BookingService {
         'providerId': providerId,
         'providerName': providerName,
         'providerPhoto': providerPhoto,
+        'phoneNumber': phoneNumber,
         'serviceType': serviceType,
         'serviceImage': serviceImage, 
         'date': Timestamp.fromDate(date),
@@ -206,6 +207,90 @@ class BookingService {
       throw Exception('Failed to reject booking: $e');
     }
   }
+
+
+
+  // Update Booking Request (user edits a pending booking)
+Future<void> updateBooking({
+  required String bookingId,
+  required String providerId,
+  required String userId,
+  required DateTime date,
+  required String time,
+  required String address,
+  required String notes,
+  required List<String> imageUrls,
+}) async {
+  try {
+    final updateData = {
+      'date': Timestamp.fromDate(date),
+      'time': time,
+      'address': address,
+      'notes': notes,
+      'imageUrls': imageUrls,
+      'updatedAt': Timestamp.now(),
+    };
+
+    // Update in provider's subcollection
+    await _firestore
+        .collection('service_provider')
+        .doc(providerId)
+        .collection('booking_requests')
+        .doc(bookingId)
+        .update(updateData);
+
+    // Update in user's bookings collection
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('my_bookings')
+        .doc(bookingId)
+        .update(updateData);
+
+    print('Booking updated successfully');
+  } catch (e) {
+    print('Error in updateBooking: $e');
+    throw Exception('Failed to update booking: $e');
+  }
+}
+
+
+
+
+
+// Cancel Booking (user cancels a pending booking)
+Future<void> cancelBooking({
+  required String bookingId,
+  required String providerId,
+  required String userId,
+}) async {
+  try {
+    // Delete from provider's subcollection
+    await _firestore
+        .collection('service_provider')
+        .doc(providerId)
+        .collection('booking_requests')
+        .doc(bookingId)
+        .delete();
+
+    // Delete from user's bookings collection
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('my_bookings')
+        .doc(bookingId)
+        .delete();
+
+    print('Booking cancelled successfully');
+  } catch (e) {
+    print('Error in cancelBooking: $e');
+    throw Exception('Failed to cancel booking: $e');
+  }
+}
+
+
+
+
 
   //  Mark Booking as Completed 
   Future<void> completeBooking({

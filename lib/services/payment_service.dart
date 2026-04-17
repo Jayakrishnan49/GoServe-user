@@ -45,39 +45,79 @@ class PaymentService {
     }
   }
 
-  Future<void> _handleSuccess(PaymentSuccessResponse response) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('my_bookings')
-          .doc(bookingId)
-          .update({
-        'paymentStatus': 'paid',
-        'paymentId': response.paymentId,
-        'paidAt': FieldValue.serverTimestamp(),
-      });
-      Navigator.pop(context);
-      Fluttertoast.showToast(msg: "Payment Successful");
-      // Navigator.pop(context); // optional (close bottom sheet/dialog)
-      // Navigator.push(context, MaterialPageRoute(builder: (context) => RatingPage(providerId: providerId, bookingId: bookingId),));
-      showDialog(
-        context: context,
-        builder: (_) =>  RatingDialog(
-          providerId: providerId,
-          bookingId: bookingId,
-        ),
-      );
+  // Future<void> _handleSuccess(PaymentSuccessResponse response) async {
+  //   try {
+  //     await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(userId)
+  //         .collection('my_bookings')
+  //         .doc(bookingId)
+  //         .update({
+  //       'paymentStatus': 'paid',
+  //       'paymentId': response.paymentId,
+  //       'paidAt': FieldValue.serverTimestamp(),
+  //     });
+  //     Navigator.pop(context);
+  //     Fluttertoast.showToast(msg: "Payment Successful");
+  //     // Navigator.pop(context); // optional (close bottom sheet/dialog)
+  //     // Navigator.push(context, MaterialPageRoute(builder: (context) => RatingPage(providerId: providerId, bookingId: bookingId),));
+  //     showDialog(
+  //       context: context,
+  //       builder: (_) =>  RatingDialog(
+  //         providerId: providerId,
+  //         bookingId: bookingId,
+  //       ),
+  //     );
 
 
-    } catch (e) {
-      debugPrint('Firestore error: $e');
-      Fluttertoast.showToast(msg: "Payment done, but update failed");
-    } finally {
-      dispose();
-    }
+  //   } catch (e) {
+  //     debugPrint('Firestore error: $e');
+  //     Fluttertoast.showToast(msg: "Payment done, but update failed");
+  //   } finally {
+  //     dispose();
+  //   }
+  // }
+
+
+Future<void> _handleSuccess(PaymentSuccessResponse response) async {
+  try {
+    final updateData = {
+      'paymentStatus': 'paid',
+      'paymentId': response.paymentId,
+      'paidAt': FieldValue.serverTimestamp(),
+    };
+
+    // ✅ Update user's collection
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('my_bookings')
+        .doc(bookingId)
+        .update(updateData);
+
+    // ✅ Also update provider's collection
+    await FirebaseFirestore.instance
+        .collection('service_provider')
+        .doc(providerId)
+        .collection('booking_requests')
+        .doc(bookingId)
+        .update(updateData);
+
+    Fluttertoast.showToast(msg: "Payment Successful");
+    showDialog(
+      context: context,
+      builder: (_) => RatingDialog(
+        providerId: providerId,
+        bookingId: bookingId,
+      ),
+    );
+  } catch (e) {
+    debugPrint('Firestore error: $e');
+    Fluttertoast.showToast(msg: "Payment done, but update failed");
+  } finally {
+    dispose();
   }
-
+}
   void _handleError(PaymentFailureResponse response) {
     // Fluttertoast.showToast(msg: "Payment Failed");
     Fluttertoast.showToast(

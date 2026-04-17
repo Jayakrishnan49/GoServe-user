@@ -21,4 +21,8 @@ class AppColors {
   //////
   
   static const Color rating=Color.fromARGB(255, 255, 183, 0);
+
+  /////
+  
+  static const Color favorite=Color.fromARGB(215, 235, 56, 116);
 }

@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project_2/View/auth/login_screen/login_main.dart';
 import 'package:project_2/constants/app_color.dart';
 import 'package:project_2/controllers/auth_provider/auth_provider.dart';
+import 'package:project_2/controllers/user_provider/user_provider.dart';
+import 'package:project_2/view/add_account_screen/add_account_main.dart';
 import 'package:provider/provider.dart';
 
 import '../bottom_nav/bottom_nav_screen.dart';
@@ -9,21 +12,51 @@ import '../bottom_nav/bottom_nav_screen.dart';
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-  void navigateUser(BuildContext context) async {
-    final authProvider = Provider.of<UserAuthProvider>(context, listen: false);
-    bool isLoggedIn = await authProvider.checkUserLogin();
+  // void navigateUser(BuildContext context) async {
+  //   // final authProvider = Provider.of<UserAuthProvider>(context, listen: false);
+  //   // bool isLoggedIn = await authProvider.checkUserLogin();
 
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) =>
-                  isLoggedIn ?  MainScreenWithNavigation() : const LoginMain(),
-        ),
-      );
-    });
+  //   Future.delayed(const Duration(seconds: 2), () {
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder:
+  //             (context) =>
+  //                 isLoggedIn ?  MainScreenWithNavigation() : const LoginMain(),
+  //       ),
+  //     );
+  //   });
+  // }
+
+  void navigateUser(BuildContext context) async {
+  await Future.delayed(const Duration(seconds: 2));
+
+  final user = FirebaseAuth.instance.currentUser;
+
+  if (user == null) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginMain()),
+    );
+    return;
   }
+
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  final userExists = await userProvider.checkUserRegistration();
+
+  if (userExists != null) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => MainScreenWithNavigation()),
+    );
+  } else {
+    userProvider.resetProfileState();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const AddAccountMain()),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {

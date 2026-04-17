@@ -41,19 +41,22 @@ class UserAuthProvider extends ChangeNotifier {
   Future<void> loginAccount(String email, String password, BuildContext context) async {
   try {
     _setLoading(true);
+    context.read<UserProvider>().resetProfileState();
     await auth.signInWithEmailAndPassword(email: email, password: password);
-    await saveUserLoggedIn();
+    // await saveUserLoggedIn();
 
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final userExists = await userProvider.checkUserRegistration();
 
     if (userExists != null) {
+      await userProvider.fetchUser(userExists);
       // ✅ Firestore document found → Go to Home
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => MainScreenWithNavigation()),
       );
     } else {
+      userProvider.resetProfileState();
       //  No document found → Go to Add Account (Profile Creation)
       Navigator.pushReplacement(
         context,
@@ -84,43 +87,59 @@ class UserAuthProvider extends ChangeNotifier {
   //   }
   // }
 
-    Future<UserCredential> signUpAccount(String email, String password) async {
-    try {
-      _setLoading(true);
-      final UserCredential cred = await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      return cred;
-    } on FirebaseAuthException catch (e) {
-      throw Exception(e.message);
-    } finally {
-      _setLoading(false);
-    }
-  }
+  //   Future<UserCredential> signUpAccount(String email, String password) async {
+  //   try {
+  //     _setLoading(true);
+  //     final UserCredential cred = await auth.createUserWithEmailAndPassword(
+  //         email: email, password: password);
+  //     return cred;
+  //   } on FirebaseAuthException catch (e) {
+  //     throw Exception(e.message);
+  //   } finally {
+  //     _setLoading(false);
+  //   }
+  // }
 
-  Future<void> logout() async {
+  Future<void> signUpAccount(String email, String password) async {
+  try {
+    _setLoading(true);
+    await auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    await auth.signOut();
+  } on FirebaseAuthException catch (e) {
+    throw Exception(e.message);
+  } finally {
+    _setLoading(false);
+  }
+} 
+
+  Future<void> logout(BuildContext context) async {
     try {
       await auth.signOut();
 // await googleUser
  await _googleSignIn.signOut();
+ context.read<UserProvider>().resetProfileState();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.clear();
-
+      
       notifyListeners();
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-  Future<bool> checkUserLogin() async {
-    final sharedPref = await SharedPreferences.getInstance();
-    return sharedPref.getBool('isLoggedIn') ?? false;
-  }
+  // Future<bool> checkUserLogin() async {
+  //   final sharedPref = await SharedPreferences.getInstance();
+  //   return sharedPref.getBool('isLoggedIn') ?? false;
+  // }
 
-  Future<void> saveUserLoggedIn() async {
-    final sharedPref = await SharedPreferences.getInstance();
-    sharedPref.setBool('isLoggedIn', true);
-    notifyListeners();
-  }
+  // Future<void> saveUserLoggedIn() async {
+  //   final sharedPref = await SharedPreferences.getInstance();
+  //   sharedPref.setBool('isLoggedIn', true);
+  //   notifyListeners();
+  // }
 //////////////
     Future<void> verifyPhone({
     required String phoneNumber,

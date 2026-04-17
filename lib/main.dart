@@ -58,10 +58,12 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:media_store_plus/media_store_plus.dart';
 import 'package:project_2/controllers/auth_provider/auth_provider.dart';
 import 'package:project_2/controllers/booking_provider/booking_request_provider.dart';
 import 'package:project_2/controllers/browse_all_category_provider/browse_all_category_provider.dart';
 import 'package:project_2/controllers/custom_textform_field_provider/custom_text_form_field_provider.dart';
+import 'package:project_2/controllers/policy_provider/policy_provider.dart';
 import 'package:project_2/controllers/rating_provider/rating_provider.dart';
 import 'package:project_2/controllers/search_filter_provider/filter_provider.dart';
 import 'package:project_2/controllers/search_filter_provider/search_provider.dart';
@@ -78,6 +80,8 @@ void main() async {
   await Firebase.initializeApp(
     // options: DefaultFirebaseOptions.currentPlatform,
   );
+  await MediaStore.ensureInitialized();
+  MediaStore.appFolder = 'GoServe';
   runApp(const MyApp());
 }
 
@@ -101,6 +105,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FavoriteProvider()..loadFavorites()),
         ChangeNotifierProvider(create: (_) => ServiceProviderDetailsProvider()),
         ChangeNotifierProvider(create: (_) => BookingRequestProvider()),
+        ChangeNotifierProvider(create: (_) => PolicyProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

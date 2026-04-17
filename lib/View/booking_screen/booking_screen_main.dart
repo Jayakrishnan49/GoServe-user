@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_2/constants/app_color.dart';
 import 'package:project_2/controllers/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:project_2/view/booking_screen/booking_list_view.dart';
@@ -15,13 +16,16 @@ class BookingScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.secondary,
         appBar: AppBar(
-          title: const Text(
-            'My Bookings',
-            style: TextStyle(
-              color: AppColors.secondary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          centerTitle: true,
+          title: Text(
+                  'My Booking',
+                  style: TextStyle(
+                    color: AppColors.secondary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.3,
+                  ),
+                ),
           backgroundColor: AppColors.primary,
           elevation: 0,
           automaticallyImplyLeading: false,
@@ -35,10 +39,10 @@ class BookingScreen extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
             tabs: const [
-              Tab(text: 'Pending'),
-              Tab(text: 'Accepted'),
-              Tab(text: 'Completed'),
-              Tab(text: 'Rejected',)
+              Tab(text: 'Pending',icon: Icon(Icons.hourglass_bottom),),
+              Tab(text: 'Accepted',icon: Icon(Icons.check_circle_outline),),
+              Tab(text: 'Completed',icon: Icon(Icons.done_all),),
+              Tab(text: 'Rejected',icon: Icon(Icons.cancel),)
             ],
           ),
         ),

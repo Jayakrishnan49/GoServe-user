@@ -21,7 +21,7 @@ class SignupBottom extends StatelessWidget {
                 TextSpan(
                   text: ' Log In',
                   style: TextStyle(
-                    color: AppColors.primary,
+                    color: const Color.fromARGB(255, 14, 93, 139),
                     decoration: TextDecoration.underline,
                     fontStyle: FontStyle.italic
                   ),

@@ -56,6 +56,15 @@ dependencies:
   razorpay_flutter: ^1.4.0
   fluttertoast: ^8.2.14
   flutter_rating_bar: ^4.0.1
+  pdf: ^3.11.3
+  path_provider: ^2.1.5
+  open_filex: ^4.7.0
+  share_plus: ^12.0.1
+  media_store_plus: ^0.1.3
+  google_maps_flutter: ^2.14.2
+  url_launcher: ^6.3.2
+  geocoding: ^4.0.0
+  webview_flutter: ^4.13.1
 
 dev_dependencies:
   flutter_test:
@@ -91,9 +100,15 @@ flutter:
     - assets/cancel_booking/cancel_booking.png
     - assets/icons/google_image.png
     - assets/icons/call_image_blue.png
-    - assets/favorites/favorites_img.png
+    # - assets/favorites/favorites_img.png
+    - assets/favorites/favorites_new_img.png
     - assets/icons/worker_not_available.png
+    - assets/rating_and_review/rating_and_review.png
     - assets/animations/success_booking_request.json
+    - assets/auth_section/login_bg_img.png
+    - assets/complete_profile/complete_your_profile.png
+    - assets/search/no_search_result.png
+    - assets/animations/Recycling Bin (2).json
    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

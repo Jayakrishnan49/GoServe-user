@@ -142,12 +142,12 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:project_2/widgets/custom_snack_bar.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:project_2/widgets/custom_modern_snackbar.dart';
 import 'package:project_2/widgets/location_confirm_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:project_2/constants/app_color.dart';
 import 'package:project_2/controllers/user_provider/user_provider.dart';
-import 'package:project_2/view/bottom_nav/bottom_nav_screen.dart';
 import 'package:project_2/widgets/custom_button.dart';
 
 class LocationAccessScreen extends StatelessWidget {
@@ -201,17 +201,30 @@ class LocationAccessScreen extends StatelessWidget {
           iconColor = Colors.red;
       }
 
-      CustomSnackBar.show(
-        context: context,
-        title: title,
-        message: message,
-        icon: icon,
-        iconColor: iconColor,
-        accentColor: iconColor,
-        duration: provider.locationError == 'permission_denied_forever'
-            ? const Duration(seconds: 7)
-            : const Duration(seconds: 5),
-      );
+      // CustomSnackBar.show(
+      //   context: context,
+      //   title: title,
+      //   message: message,
+      //   icon: icon,
+      //   iconColor: iconColor,
+      //   accentColor: iconColor,
+      //   duration: provider.locationError == 'permission_denied_forever'
+      //       ? const Duration(seconds: 7)
+      //       : const Duration(seconds: 5),
+      // );
+      ModernSnackBar.show(
+  context: context,
+  title: title,
+  message: message,
+  type: provider.locationError == 'permission_denied'
+      ? SnackBarType.warning
+      : SnackBarType.error,
+);
+      if (provider.locationError == 'location_service_disabled') {
+  await Geolocator.openLocationSettings();
+} else if (provider.locationError == 'permission_denied_forever') {
+  await Geolocator.openAppSettings();
+}
       return;
     }
 
@@ -240,63 +253,67 @@ class LocationAccessScreen extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/location_access/location_access.png'),
-                    const Text(
-                      'Allow location access ?',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'We need your location access to easily find professionals around you',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.hintText,
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                    CustomButton(
-                      text: isLoading
-                          ? 'Getting location...'
-                          : 'Allow location access',
-                      width: 400,
-                      borderRadius: 15,
-                      onTap: isLoading
-                          ? null
-                          : () => _handleLocationAccess(context, provider),
-                    ),
-                    const SizedBox(height: 20),
-                    InkWell(
-                      onTap: isLoading
-                          ? null
-                          : () {
-                              provider.resetLocationState();
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MainScreenWithNavigation(),
-                                ),
-                              );
-                            },
-                      child: Text(
-                        'Skip this step',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: isLoading
-                              ? AppColors.hintText
-                              : AppColors.primary,
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/location_access/location_access.png'),
+                        const Text(
+                          'Allow location access ?',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'We need your location access to easily find professionals around you',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.hintText,
+                          ),
+                        ),
+                        const SizedBox(height: 50),
+                        CustomButton(
+                          text: isLoading
+                              ? 'Getting Location...'
+                              : 'Allow Location Access',
+                          width: 400,
+                          borderRadius: 15,
+                          onTap: isLoading
+                              ? null
+                              : () => _handleLocationAccess(context, provider),
+                        ),
+                        // const SizedBox(height: 20),
+                        // InkWell(
+                        //   onTap: isLoading
+                        //       ? null
+                        //       : () {
+                        //           provider.resetLocationState();
+                        //           Navigator.pushReplacement(
+                        //             context,
+                        //             MaterialPageRoute(
+                        //               builder: (context) =>
+                        //                   const MainScreenWithNavigation(),
+                        //             ),
+                        //           );
+                        //         },
+                        //   child: Text(
+                        //     'Skip this step',
+                        //     textAlign: TextAlign.center,
+                        //     style: TextStyle(
+                        //       decoration: TextDecoration.underline,
+                        //       color: isLoading
+                        //           ? AppColors.hintText
+                        //           : AppColors.primary,
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
               if (isLoading)

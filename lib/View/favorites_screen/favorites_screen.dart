@@ -16,14 +16,17 @@ class FavoritesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.secondary,
-      appBar: AppBar(    
+      appBar: AppBar(   
+        centerTitle: true, 
         title: Text(
-          'My Favorites',
-          style: TextStyle(
-            color: AppColors.secondary,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+                  'My favorites',
+                  style: TextStyle(
+                    color: AppColors.secondary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.3,
+                  ),
+                ),
         backgroundColor: AppColors.primary,
         elevation: 0,
       ),
@@ -52,9 +55,9 @@ class FavoritesPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/favorites/favorites_img.png',
+                      'assets/favorites/favorites_new_img.png',
                       // height: 500,
-                      width: 250,
+                      width: 300,
                     ),
                     Text(
                       'No favorites yet',

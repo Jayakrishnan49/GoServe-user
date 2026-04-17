@@ -36,7 +36,7 @@ class EmptyBookingState extends StatelessWidget {
           Icon(
             icon,
             size: 80,
-            color: AppColors.textColor.withOpacity(0.3),
+            color: Colors.orange.withValues(alpha:0.5 ),
           ),
           const SizedBox(height: 16),
           Text(

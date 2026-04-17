@@ -193,10 +193,14 @@
 
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project_2/Constants/app_color.dart';
 import 'package:project_2/View/service_provider_details_page/service_provider_details_page.dart';
+import 'package:project_2/controllers/rating_provider/rating_provider.dart';
 import 'package:project_2/model/service_model.dart';
+import 'package:project_2/utilities/rating_color_helper.dart';
+import 'package:provider/provider.dart';
 
 class ServiceProviderCard extends StatelessWidget {
   final ServiceProviderModel provider;
@@ -283,45 +287,119 @@ class ServiceProviderCard extends StatelessWidget {
                         ),
                       ),
                       // Rating Badge
+
                       Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.secondary,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.textColor.withValues(alpha: 0.1),
-                                blurRadius: 4,
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                color: Color(0xFFFFC107),
-                                size: 14,
-                              ),
-                              const SizedBox(width: 3),
-                              Text(
-                                rating.toString(),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.textColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+  top: 8,
+  right: 8,
+  child: StreamBuilder<QuerySnapshot>(
+    stream: context
+        .read<RatingProvider>()
+        .getProviderRatings(provider.providerId),
+    builder: (context, snapshot) {
+
+      double rating = 0;
+
+      if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+        double total = 0;
+
+        for (var doc in snapshot.data!.docs) {
+          total += (doc['rating'] ?? 0).toDouble();
+        }
+
+        rating = total / snapshot.data!.docs.length;
+      }
+
+      Color ratingColor = getRatingColor(rating);
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: AppColors.secondary,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.textColor.withValues(alpha: 0.1),
+              blurRadius: 4,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+             Icon(
+              Icons.star,
+              color: ratingColor,
+              size: 14,
+            ),
+            const SizedBox(width: 3),
+            Text(
+              rating == 0 ? "New" : rating.toStringAsFixed(1),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: ratingColor,
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  ),
+),
+
+
+        //               Positioned(
+        //                 top: 8,
+        //                 right: 8,
+        //                 child: StreamBuilder(
+        //                   stream: context.read<RatingProvider>().getProviderRatings(provider.providerId),
+        //                   builder: (context, snapshot) {
+        //                     double rating=0;
+        //                     if(snapshot.hasData&&snapshot.data!.docs.isNotEmpty){
+        //                       double total=0;
+        //                       for (var doc in snapshot.data!.docs) {
+        //   total += (doc['rating'] ?? 0).toDouble();
+        // }
+
+        // rating = total / snapshot.data!.docs.length;
+        //                     }
+        //                   },
+        //                   return Container(
+        //                     padding: const EdgeInsets.symmetric(
+        //                       horizontal: 8,
+        //                       vertical: 4,
+        //                     ),
+        //                     decoration: BoxDecoration(
+        //                       color: AppColors.secondary,
+        //                       borderRadius: BorderRadius.circular(12),
+        //                       boxShadow: [
+        //                         BoxShadow(
+        //                           color: AppColors.textColor.withValues(alpha: 0.1),
+        //                           blurRadius: 4,
+        //                         ),
+        //                       ],
+        //                     ),
+        //                     child: Row(
+        //                       mainAxisSize: MainAxisSize.min,
+        //                       children: [
+        //                         const Icon(
+        //                           Icons.star,
+        //                           color: Color(0xFFFFC107),
+        //                           size: 14,
+        //                         ),
+        //                         const SizedBox(width: 3),
+        //                         Text(
+        //                           rating.toString(),
+        //                           style: TextStyle(
+        //                             fontSize: 12,
+        //                             fontWeight: FontWeight.bold,
+        //                             color: AppColors.textColor,
+        //                           ),
+        //                         ),
+        //                       ],
+        //                     ),
+        //                   ),
+        //                 ),
+        //               ),
                     ],
                   ),
                   // Info Section

@@ -1,9 +1,11 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:project_2/services/booking_service.dart';
 import 'package:project_2/model/service_model.dart';
+import 'package:project_2/services/cloudinary_service.dart';
 
 class BookingRequestProvider extends ChangeNotifier {
   final TextEditingController addressController = TextEditingController();
@@ -15,6 +17,8 @@ class BookingRequestProvider extends ChangeNotifier {
   String _serviceType = '';
   final List<File> _selectedImages = [];
   final ImagePicker _picker = ImagePicker();
+  // Add this field after _selectedImages
+  final List<String> _existingImageUrls = [];
   
   final BookingService _bookingService = BookingService();
 
@@ -23,11 +27,59 @@ class BookingRequestProvider extends ChangeNotifier {
   String get serviceType => _serviceType;
   String get selectedServiceType => _serviceType;
   List<File> get selectedImages => _selectedImages;
+  List<String> get existingImageUrls => _existingImageUrls;
 
   void initializeServiceType(String service) {
     _serviceType = service;
     notifyListeners();
   }
+
+  void removeExistingImage(String url) {
+    _existingImageUrls.remove(url);
+    notifyListeners();
+  }
+
+
+    // ─── NEW: Pre-fill fields when editing ───────────────────────────────────
+  void prefillIfEditing(Map<String, dynamic>? existingBooking) {
+    final urls = existingBooking?['imageUrls'];
+    if (existingBooking == null) return;
+
+    // Address & notes
+    addressController.text = existingBooking['address'] ?? '';
+    notesController.text = existingBooking['notes'] ?? '';
+
+    // Date — stored as Firestore Timestamp
+    if (existingBooking['date'] != null) {
+      _selectedDate = (existingBooking['date'] as Timestamp).toDate();
+    }
+
+    // Time — stored as "9:30 AM" string
+    if (existingBooking['time'] != null) {
+      _selectedTime = _parseTimeString(existingBooking['time']);
+    }
+
+    if (urls != null) {
+      _existingImageUrls.addAll(List<String>.from(urls));
+    }
+
+    notifyListeners();
+  }
+
+  // Parses "9:30 AM" → TimeOfDay
+  TimeOfDay _parseTimeString(String timeStr) {
+    final parts = timeStr.split(' ');
+    final timeParts = parts[0].split(':');
+    int hour = int.parse(timeParts[0]);
+    final int minute = int.parse(timeParts[1]);
+    final bool isPm = parts[1].toUpperCase() == 'PM';
+    if (isPm && hour != 12) hour += 12;
+    if (!isPm && hour == 12) hour = 0;
+    return TimeOfDay(hour: hour, minute: minute);
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
+
 
   void setSelectedDate(DateTime date) {
     _selectedDate = date;
@@ -51,21 +103,41 @@ class BookingRequestProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Future<void> pickImages() async {
+  //   try {
+  //     final List<XFile> images = await _picker.pickMultiImage();
+  //     if (images.isNotEmpty) {
+  //       for (var image in images) {
+  //         if (_selectedImages.length < 5) {
+  //           _selectedImages.add(File(image.path));
+  //         }
+  //       }
+  //       notifyListeners();
+  //     }
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
+
+
   Future<void> pickImages() async {
-    try {
-      final List<XFile> images = await _picker.pickMultiImage();
-      if (images.isNotEmpty) {
-        for (var image in images) {
-          if (_selectedImages.length < 5) {
-            _selectedImages.add(File(image.path));
-          }
+  try {
+    final int remaining = 5 - _existingImageUrls.length - _selectedImages.length; // ← fix
+    if (remaining <= 0) return;
+
+    final List<XFile> images = await _picker.pickMultiImage();
+    if (images.isNotEmpty) {
+      for (var image in images) {
+        if (_selectedImages.length + _existingImageUrls.length < 5) { // ← fix
+          _selectedImages.add(File(image.path));
         }
-        notifyListeners();
       }
-    } catch (e) {
-      rethrow;
+      notifyListeners();
     }
+  } catch (e) {
+    rethrow;
   }
+}
 
   bool validateForm() {
     return formKey.currentState?.validate() ?? false;
@@ -100,10 +172,67 @@ class BookingRequestProvider extends ChangeNotifier {
     }
   }
 
+
+//   Future<void> updateBooking({
+//   required String bookingId,
+//   required String providerId,
+//   required String userId,
+  
+// }) async {
+//   try {
+//     await _bookingService.updateBooking(
+//       bookingId: bookingId,
+//       providerId: providerId,
+//       userId: userId,
+//       date: _selectedDate!,
+//       time: _formatTimeOfDay(_selectedTime!),
+//       address: addressController.text.trim(),
+//       notes: notesController.text.trim(),
+//       imageUrls: _existingImageUrls,
+//     );
+//   } catch (e) {
+//     rethrow;
+//   }
+// }
+
+
+Future<void> updateBooking({
+  required String bookingId,
+  required String providerId,
+  required String userId,
+}) async {
+  try {
+    // ← upload newly picked local images to Cloudinary
+    List<String> newImageUrls = [];
+    if (_selectedImages.isNotEmpty) {
+      newImageUrls = await CloudinaryService().uploadMultipleImages(_selectedImages);
+    }
+
+    // ← merge: kept existing URLs + newly uploaded URLs
+    final allImageUrls = [..._existingImageUrls, ...newImageUrls];
+
+    await _bookingService.updateBooking(
+      bookingId: bookingId,
+      providerId: providerId,
+      userId: userId,
+      date: _selectedDate!,
+      time: _formatTimeOfDay(_selectedTime!),
+      address: addressController.text.trim(),
+      notes: notesController.text.trim(),
+      imageUrls: allImageUrls,   // ← pass merged list
+    );
+  } catch (e) {
+    rethrow;
+  }
+}
+
+
+
   void reset() {
     _selectedDate = null;
     _selectedTime = null;
     _selectedImages.clear();
+    _existingImageUrls.clear();
     addressController.clear();
     notesController.clear();
     notifyListeners();

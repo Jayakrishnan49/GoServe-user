@@ -28,7 +28,7 @@ class LoginBottom extends StatelessWidget {
               TextSpan(
                 text: ' Sign Up',
                 style: TextStyle(
-                  color: AppColors.primary,
+                  color: const Color.fromARGB(255, 14, 93, 139),
                   decoration: TextDecoration.underline,
                   fontStyle: FontStyle.italic,
                 ),
@@ -42,7 +42,7 @@ class LoginBottom extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 90),
+        const SizedBox(height: 80),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

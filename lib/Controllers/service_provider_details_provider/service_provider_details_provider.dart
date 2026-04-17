@@ -10,8 +10,11 @@ class ServiceProviderDetailsProvider extends ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _hasFetched = false;
 
   Future<void> fetchAllProviders() async {
+    if(_hasFetched)return;
+    _hasFetched=true;
     _isLoading = true;
     notifyListeners();
 

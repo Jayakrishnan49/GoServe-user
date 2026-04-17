@@ -58,7 +58,7 @@ class PriceSummaryCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Additional charges may apply based on work complexity',
+                    'After the first hour, additional charges will be ₹200 per hour.',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.blue[700],

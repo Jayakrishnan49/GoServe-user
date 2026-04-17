@@ -418,7 +418,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:project_2/View/booking_request_form_page/booking_request_form_page_main.dart';
 import 'package:project_2/constants/app_color.dart';
+import 'package:project_2/model/service_model.dart';
 import 'package:project_2/view/booking_detail_screen/booking_detail_screen.dart';
 import 'package:project_2/view/booking_screen/widgets/booking_info_row.dart';
 import 'package:project_2/widgets/custom_button.dart';
@@ -513,7 +516,7 @@ class BookingCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Service Image & Name Header
-                _buildServiceHeader(statusColor),
+                _buildServiceHeader(statusColor,context),
 
                 Padding(
                   padding: const EdgeInsets.all(20),
@@ -651,7 +654,7 @@ class BookingCard extends StatelessWidget {
     );
   }
 
-  Widget _buildServiceHeader(Color statusColor) {
+  Widget _buildServiceHeader(Color statusColor,BuildContext context) {
     return Stack(
       children: [
         SizedBox(
@@ -695,6 +698,58 @@ class BookingCard extends StatelessWidget {
             ),
           ),
         ),
+
+
+              // Edit Button (top-right) - only for pending
+      if (status == 'pending')
+        Positioned(
+          top: 12,
+          right: 12,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.4),
+                width: 1.5,
+              ),
+            ),
+            child: IconButton(
+              onPressed: () {
+                // TODO: Navigate to edit screen
+                
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => BookingRequestFormPage(
+        provider: ServiceProviderModel(
+          providerId: booking['providerId'] ?? '',
+          name: booking['providerName'] ?? '',
+          profilePhoto: booking['providerPhoto'] ?? '',
+          selectService: booking['serviceType'] ?? '',
+          phoneNumber: booking['phoneNumber'] ?? '',
+          firstHourPrice: booking['price']?.toString() ?? '0',
+          yearsOfexperience: '', gender: '', location: '', email: '', idCardPhoto: '', experienceCertificate: '', status: '',
+          // add any other required fields with defaults
+        ),
+        existingBooking: booking,       // ← pass full booking map
+        bookingId: booking['id'],       // ← pass the booking id
+      ),
+    ),
+  );
+
+              },
+              icon: const Icon(
+                FontAwesomeIcons.edit,
+                color: Colors.white,
+                size: 20,
+              ),
+              padding: const EdgeInsets.all(8),
+              constraints: const BoxConstraints(),
+            ),
+          ),
+        ),
+
         
         // Content
         Positioned(
