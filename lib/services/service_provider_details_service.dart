@@ -8,7 +8,7 @@ class ServiceProviderDetailsService {
 
   // Get all service_provider
   Future<List<ServiceProviderModel>> getAllWorks() async {
-    final snapshot = await _serviceProviderCollection.get();
+    final snapshot = await _serviceProviderCollection.where('status',isEqualTo: 'approved').get();
     return snapshot.docs
         .map((doc) => ServiceProviderModel.fromMap(doc.id, doc.data() as Map<String, dynamic>))
         .toList();

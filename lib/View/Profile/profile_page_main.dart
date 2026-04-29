@@ -1,179 +1,4 @@
 
-// import 'package:flutter/material.dart';
-// import 'package:flutter/rendering.dart';
-// import 'package:project_2/View/profile/about_app_section.dart';
-// import 'package:project_2/View/profile/general_section.dart';
-// import 'package:project_2/View/profile/logout_button.dart';
-// import 'package:project_2/View/profile/profile_header.dart';
-// import 'package:project_2/constants/app_color.dart';
-// import 'package:project_2/controllers/bottom_nav_provider/bottom_nav_provider.dart';
-// import 'package:provider/provider.dart';
-
-
-// class ProfilePageMain extends StatelessWidget {
-//   const ProfilePageMain({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: AppColors.secondary,
-//       body: NotificationListener<UserScrollNotification>(
-//         onNotification: (notification) {
-//           final navProvider = Provider.of<NavigationProvider>(context, listen: false);
-//           if (notification.direction == ScrollDirection.reverse) {
-//             navProvider.hideBottomNav();
-//           } else if (notification.direction == ScrollDirection.forward) {
-//             navProvider.showBottomNav();
-//           }
-//           return true;
-//         },
-//         child: Column(
-//           children: [
-//             const ProfileHeader(),
-//             const SizedBox(height: 24),
-//             Expanded(
-//               child: SingleChildScrollView(
-//                 physics: const BouncingScrollPhysics(),
-//                 child: Padding(
-//                   padding: const EdgeInsets.symmetric(horizontal: 20),
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       GeneralSection(),
-//                       const SizedBox(height: 28),
-//                       AboutAppSection(),
-//                       const SizedBox(height: 32),
-//                       const LogoutButton(),
-//                       const SizedBox(height: 32),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
-
-// class ChangePasswordPage extends StatelessWidget {
-//   const ChangePasswordPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Change Password'),
-//         backgroundColor: AppColors.primary,
-//         foregroundColor: Colors.white,
-//       ),
-//       body: const Center(
-//         child: Text('Change Password Page'),
-//       ),
-//     );
-//   }
-// }
-
-// class RateUsPage extends StatelessWidget {
-//   const RateUsPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Rate Us'),
-//         backgroundColor: AppColors.primary,
-//         foregroundColor: Colors.white,
-//       ),
-//       body: const Center(
-//         child: Text('Rate Us Page'),
-//       ),
-//     );
-//   }
-// }
-
-// class PrivacyPolicyPage extends StatelessWidget {
-//   const PrivacyPolicyPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Privacy Policy'),
-//         backgroundColor: AppColors.primary,
-//         foregroundColor: Colors.white,
-//       ),
-//       body: const Center(
-//         child: Text('Privacy Policy Page'),
-//       ),
-//     );
-//   }
-// }
-
-// class TermsConditionsPage extends StatelessWidget {
-//   const TermsConditionsPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Terms & Conditions'),
-//         backgroundColor: AppColors.primary,
-//         foregroundColor: Colors.white,
-//       ),
-//       body: const Center(
-//         child: Text('Terms & Conditions Page'),
-//       ),
-//     );
-//   }
-// }
-
-// class HelpSupportPage extends StatelessWidget {
-//   const HelpSupportPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Help Support'),
-//         backgroundColor: AppColors.primary,
-//         foregroundColor: Colors.white,
-//       ),
-//       body: const Center(
-//         child: Text('Help Support Page'),
-//       ),
-//     );
-//   }
-// }
-
-// // class AboutPage extends StatelessWidget {
-// //   const AboutPage({super.key});
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return Scaffold(
-// //       appBar: AppBar(
-// //         title: const Text('About'),
-// //         backgroundColor: AppColors.primary,
-// //         foregroundColor: Colors.white,
-// //       ),
-// //       body: const Center(
-// //         child: Text('About Page'),
-// //       ),
-// //     );
-// //   }
-// // }
-
-
-
-
-
-
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -262,7 +87,7 @@ class ProfilePageMain extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Text('SETTINGS',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF8E8E93),
                       letterSpacing: 0.6,
@@ -361,25 +186,25 @@ class _QuickCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 38,
-                height: 38,
+                width: 42,
+                height: 42,
                 decoration: BoxDecoration(
                   color: bgColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: iconColor, size: 18),
+                child: Icon(icon, color: iconColor, size: 22),
               ),
               const SizedBox(height: 10),
               Text(label,
                   style: const TextStyle(
-                    fontSize: 13,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF1C1C1E),
                   )),
               const SizedBox(height: 2),
               Text(sub,
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 13,
                     color: Color(0xFF8E8E93),
                   )),
             ],
@@ -457,13 +282,13 @@ class _MenuItem extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 34,
-              height: 34,
+              width: 42,
+              height: 42,
               decoration: BoxDecoration(
                 color: iconBg,
                 borderRadius: BorderRadius.circular(9),
               ),
-              child: Icon(icon, color: iconColor, size: 17),
+              child: Icon(icon, color: iconColor, size: 22),
             ),
             const SizedBox(width: 14),
             // Expanded(
@@ -481,7 +306,7 @@ class _MenuItem extends StatelessWidget {
       Text(
         label,
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 15,
           fontWeight: FontWeight.w500,
           color: labelColor,
         ),
@@ -490,7 +315,7 @@ class _MenuItem extends StatelessWidget {
       Text(
         sub,
         style: const TextStyle(
-          fontSize: 11,
+          fontSize: 12,
           color: Color(0xFF8E8E93),
         ),
       ),

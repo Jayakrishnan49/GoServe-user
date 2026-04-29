@@ -1,49 +1,7 @@
-// import 'package:flutter/material.dart';
-// import 'package:project_2/constants/app_color.dart';
-// import 'package:project_2/View/edit_profile_screen/edit_profile_form.dart';
-// import 'package:project_2/View/edit_profile_screen/edit_profile_top.dart';
-
-// class EditProfileMain extends StatelessWidget {
-//   const EditProfileMain({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: AppColors.primary,
-//         title: Text('Edit Profile',style: TextStyle(color: AppColors.secondary),),
-//       ),
-//       backgroundColor: AppColors.secondary,
-//       body: SafeArea(
-//         child: Padding(
-//           padding: const EdgeInsets.all(20.0),
-//           child: SingleChildScrollView(
-//             child: Center(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   EditProfileTop(),
-//                   SizedBox(height: 60,),
-//                   EditProfileForm(),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
-
-
-
 
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:project_2/constants/app_color.dart';
 import 'package:project_2/controllers/user_provider/user_provider.dart';
 import 'package:project_2/utilities/app_validators.dart';
@@ -335,36 +293,60 @@ Widget _buildLocationSection(BuildContext context) {
         //   // 👇 Replace with your actual map picker route
         //   Navigator.pushNamed(context, '/map-picker');
         // },
-        onTap: () {
-  final userProvider = context.read<UserProvider>();
-  final position = userProvider.currentPosition;
+//         onTap: () {
+//   final userProvider = context.read<UserProvider>();
+//   final position = userProvider.currentPosition;
 
-  if (position != null) {
+//   if (position != null) {
+//     showDialog(
+//       context: context,
+//       useRootNavigator: true,
+//       builder: (_) => LocationConfirmDialog(
+//         lat: position.latitude,
+//         long: position.longitude,
+//         navigateToHomeOnConfirm: false,
+//       ),
+//     );
+//   } else {
+//     // No GPS position yet — request it first, then open dialog
+//     userProvider.requestLocationPermission().then((granted) {
+//       if (granted && context.mounted) {
+//         final pos = userProvider.currentPosition!;
+//         showDialog(
+//           context: context,
+//           useRootNavigator: true, 
+//           builder: (_) => LocationConfirmDialog(
+//             lat: pos.latitude,
+//             long: pos.longitude,
+//             navigateToHomeOnConfirm: false,
+//           ),
+//         );
+//       }
+//     });
+//   }
+// },
+
+onTap: () async {
+  final userProvider = context.read<UserProvider>();
+
+  Position? position = userProvider.currentPosition;
+
+  if (position == null) {
+    final granted = await userProvider.requestLocationPermission();
+    if (!granted || !context.mounted) return;
+
+    position = userProvider.currentPosition;
+  }
+
+  if (position != null && context.mounted) {
     showDialog(
       context: context,
-      useRootNavigator: false,
       builder: (_) => LocationConfirmDialog(
-        lat: position.latitude,
+        lat: position!.latitude,
         long: position.longitude,
         navigateToHomeOnConfirm: false,
       ),
     );
-  } else {
-    // No GPS position yet — request it first, then open dialog
-    userProvider.requestLocationPermission().then((granted) {
-      if (granted && context.mounted) {
-        final pos = userProvider.currentPosition!;
-        showDialog(
-          context: context,
-          useRootNavigator: false, 
-          builder: (_) => LocationConfirmDialog(
-            lat: pos.latitude,
-            long: pos.longitude,
-            navigateToHomeOnConfirm: false,
-          ),
-        );
-      }
-    });
   }
 },
         child: Container(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_2/constants/app_color.dart';
 import 'package:project_2/controllers/bottom_nav_provider/bottom_nav_provider.dart';
 import 'package:project_2/view/booking_screen/booking_list_view.dart';
