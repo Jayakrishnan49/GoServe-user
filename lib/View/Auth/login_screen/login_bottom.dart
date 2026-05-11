@@ -1,12 +1,11 @@
-import 'dart:developer';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:project_2/view/auth/phone_otp_screen/phone_otp_screen.dart';
 import 'package:project_2/view/auth/signup_screen/signup_main.dart';
-import 'package:project_2/view/bottom_nav/bottom_nav_screen.dart';
 import 'package:project_2/constants/app_color.dart';
+import 'package:project_2/widgets/custom_modern_snackbar.dart';
 import 'package:provider/provider.dart';
 import '../../../controllers/auth_provider/auth_provider.dart';
-import '../auth_nav/auth_nav.dart';
 
 class LoginBottom extends StatelessWidget {
   const LoginBottom({super.key});
@@ -63,24 +62,40 @@ class LoginBottom extends StatelessWidget {
             children: [
             
                    InkWell(
-                      onTap: () async {
-                        try {
-                          final userCredential =
-                              await context.read<UserAuthProvider>().signInWithGoogle();
-                          log(userCredential.user.toString());
+                      // onTap: () async {
+                      //   try {
+                      //     final userCredential =
+                      //         await context.read<UserAuthProvider>().signInWithGoogle();
+                      //     log(userCredential.user.toString());
 
-                          if (userCredential.user != null && context.mounted) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (_) => const MainScreenWithNavigation()),
-                            );
-                          }
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString())),
-                          );
-                        }
-                      },
+                      //     if (userCredential.user != null && context.mounted) {
+                      //       Navigator.pushReplacement(
+                      //         context,
+                      //         MaterialPageRoute(builder: (_) => const MainScreenWithNavigation()),
+                      //       );
+                      //     }
+                      //   } catch (e) {
+                      //     ScaffoldMessenger.of(context).showSnackBar(
+                      //       SnackBar(content: Text(e.toString())),
+                      //     );
+                      //   }
+                      // },
+onTap: () async {
+  try {
+    await context
+        .read<UserAuthProvider>()
+        .signInWithGoogle(context);
+  } catch (e) {
+    if (context.mounted) {
+      ModernSnackBar.show(
+        context: context,
+        title: 'Sign In Failed',
+        message: e.toString().replaceAll('Exception: ', ''),
+        type: SnackBarType.error,
+      );
+    }
+  }
+},
                       child: Image.asset(
                         'assets/icons/google_image.png',
                         width: 40,
@@ -94,6 +109,7 @@ class LoginBottom extends StatelessWidget {
               InkWell(
                 onTap: () {
                   //// navigate to phone login
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>PhoneOtpScreen()));
                 },
                 child: Image.asset(
                   'assets/icons/call_image_blue.png',

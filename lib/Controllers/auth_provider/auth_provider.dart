@@ -20,21 +20,6 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
 
-  // Future<void> loginAccount(String email, String password) async {
-  //   try {
-  //     _setLoading(true);
-  //     await auth.signInWithEmailAndPassword(email: email, password: password);
-  //        await saveUserLoggedIn();
-
-  //   } on FirebaseAuthException catch (e) {
-  //     throw Exception(e.message);
-  //   } catch (_) {
-  //     throw Exception("Something went wrong");
-  //   }
-  //   finally{
-  //     _setLoading(false);
-  //   }
-  // }
 
 
 
@@ -71,34 +56,7 @@ class UserAuthProvider extends ChangeNotifier {
 }
 
 
-  // Future<UserCredential> signUpAccount(String email, String password) async {
-  //   try {
-  //     _setLoading(true);
-  //     final UserCredential cred =
-  //         await auth.createUserWithEmailAndPassword(email: email, password: password);            
-  //     return cred;
-  //   } on FirebaseAuthException catch (e) {
-  //     throw Exception(e.message);
-  //   } catch (_) {
-  //     throw Exception("Something went wrong");
-  //   }
-  //   finally{
-  //     _setLoading(false);
-  //   }
-  // }
 
-  //   Future<UserCredential> signUpAccount(String email, String password) async {
-  //   try {
-  //     _setLoading(true);
-  //     final UserCredential cred = await auth.createUserWithEmailAndPassword(
-  //         email: email, password: password);
-  //     return cred;
-  //   } on FirebaseAuthException catch (e) {
-  //     throw Exception(e.message);
-  //   } finally {
-  //     _setLoading(false);
-  //   }
-  // }
 
   Future<void> signUpAccount(String email, String password) async {
   try {
@@ -141,34 +99,75 @@ class UserAuthProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 //////////////
-    Future<void> verifyPhone({
-    required String phoneNumber,
-    required Function(PhoneAuthCredential) onVerificationCompleted,
-    required Function(FirebaseAuthException) onVerificationFailed,
-    required Function(String verificationId, int? resendToken) onCodeSent,
-    required Function(String) onCodeAutoRetrievalTimeout,
-  }) async {
+  //   Future<void> verifyPhone({
+  //   required String phoneNumber,
+  //   required Function(PhoneAuthCredential) onVerificationCompleted,
+  //   required Function(FirebaseAuthException) onVerificationFailed,
+  //   required Function(String verificationId, int? resendToken) onCodeSent,
+  //   required Function(String) onCodeAutoRetrievalTimeout,
+  // }) async {
+  //   await auth.verifyPhoneNumber(
+  //     phoneNumber: phoneNumber,
+  //     verificationCompleted: onVerificationCompleted,
+  //     verificationFailed: onVerificationFailed,
+  //     codeSent: onCodeSent,
+  //     codeAutoRetrievalTimeout: onCodeAutoRetrievalTimeout,
+  //   );
+  // }
+
+  // Future<User?> verifyOtp(String verificationId, String smsCode) async {
+  //   final credential = PhoneAuthProvider.credential(
+  //     verificationId: verificationId,
+  //     smsCode: smsCode,
+  //   );
+  //   final userCredential = await auth.signInWithCredential(credential);
+  //   return userCredential.user;
+  // }
+
+
+
+Future<void> verifyPhone({
+  required String phoneNumber,
+  required Function(PhoneAuthCredential) onVerificationCompleted,
+  required Function(FirebaseAuthException) onVerificationFailed,
+  required Function(String verificationId, int? resendToken) onCodeSent,
+  required Function(String) onCodeAutoRetrievalTimeout,
+}) async {
+  try {
+    _setLoading(true);  // ← add this
     await auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: onVerificationCompleted,
-      verificationFailed: onVerificationFailed,
-      codeSent: onCodeSent,
+      verificationFailed: (e) {
+        _setLoading(false); // ← stop on failure
+        onVerificationFailed(e);
+      },
+      codeSent: (id, token) {
+        _setLoading(false); // ← stop when code sent
+        onCodeSent(id, token);
+      },
       codeAutoRetrievalTimeout: onCodeAutoRetrievalTimeout,
     );
+  } catch (e) {
+    _setLoading(false);
+    rethrow;
   }
+}
 
-  Future<User?> verifyOtp(String verificationId, String smsCode) async {
+Future<User?> verifyOtp(String verificationId, String smsCode) async {
+  try {
+    _setLoading(true);   // ← add this
     final credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
       smsCode: smsCode,
     );
     final userCredential = await auth.signInWithCredential(credential);
     return userCredential.user;
+  } finally {
+    _setLoading(false);  // ← add this
   }
+}
 
-  // Future<void> resetPassword(String email) async {
-  //   await auth.sendPasswordReset(email);
-  // }
   Future<void> resetPassword(String email) async {
   try {
     await auth.sendPasswordResetEmail(email: email);
@@ -181,43 +180,49 @@ class UserAuthProvider extends ChangeNotifier {
 
 
 
-// Future<UserCredential> signInWithGoogle() async {
-//   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-//   if (googleUser == null) {
-//     throw Exception('Google Sign-In aborted');
-//   }
 
-//   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  Future<void> signInWithGoogle(BuildContext context) async {
+  try {
+    _setLoading(true);
+    context.read<UserProvider>().resetProfileState();
 
-//   final credential = GoogleAuthProvider.credential(
-//     accessToken: googleAuth.accessToken,
-//     idToken: googleAuth.idToken,
-//   );
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) throw Exception('Google Sign-In aborted');
 
-//   return await auth.signInWithCredential(credential);
-// }
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
-  Future<UserCredential> signInWithGoogle() async {
-    try {
-      _setLoading(true);
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        throw Exception('Google Sign-In aborted');
-      }
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+    await auth.signInWithCredential(credential);
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userExists = await userProvider.checkUserRegistration();
+
+    if (!context.mounted) return;
+
+    if (userExists != null) {
+      await userProvider.fetchUser(userExists);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => MainScreenWithNavigation()),
       );
-
-      return await auth.signInWithCredential(credential);
-    } finally {
-      _setLoading(false);
+    } else {
+      userProvider.resetProfileState();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const AddAccountMain()),
+      );
     }
+  } on FirebaseAuthException catch (e) {
+    throw Exception(e.message);
+  } finally {
+    _setLoading(false);
   }
+}
 
 
 

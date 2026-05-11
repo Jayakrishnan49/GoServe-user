@@ -166,6 +166,50 @@
       },
       "oauth_client": [
         {
+          "client_id": "439649205142-j0jp7tegnkdilmc9sesaki5s7jd9js9o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.goserve.user",
+            "certificate_hash": "1c8de97619e0ccb4cb5ced4f9192e8111d823d44"
+          }
+        },
+        {
+          "client_id": "439649205142-pftol370miq4rcbkkj8b9pqqvajgpgle.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDFK5R4wAJqYNQKie-XyEHqpNF_4ENw5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439649205142-pftol370miq4rcbkkj8b9pqqvajgpgle.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "439649205142-3lmh96jpr7ervu1im7ooik99amk3r0bq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.project2Provider"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439649205142:android:65b368dbf848bf3dcd3bb7",
+        "android_client_info": {
+          "package_name": "com.goservice.partner"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "439649205142-pftol370miq4rcbkkj8b9pqqvajgpgle.apps.googleusercontent.com",
           "client_type": 3
         }

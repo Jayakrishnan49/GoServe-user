@@ -47,8 +47,8 @@ class ForgotPassword extends StatelessWidget {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsetsDirectional.only(
-              start: 24,
-              end: 24,
+              start: 28,
+              end: 28,
               top: 100,
               bottom: 24,
             ),
@@ -78,14 +78,14 @@ class ForgotPassword extends StatelessWidget {
               
                   const Text(
                     'Reset Password',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold,fontFamily: 'DancingScript',),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
               
                   Text(
                     'Enter the email associated with your account and we\'ll send an email with instructions to reset your password.',
-                    style: TextStyle(fontSize: 16, color:AppColors.grey),
+                    style: TextStyle(fontSize: 16, color:AppColors.grey,fontFamily: 'DancingScript',),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 40),

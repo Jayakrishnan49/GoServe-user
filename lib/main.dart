@@ -58,6 +58,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:project_2/controllers/auth_provider/auth_provider.dart';
 import 'package:project_2/controllers/booking_provider/booking_request_provider.dart';
@@ -76,7 +77,9 @@ import 'package:provider/provider.dart';
 import 'controllers/bottom_nav_provider/bottom_nav_provider.dart' show NavigationProvider;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized(); 
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(
     // options: DefaultFirebaseOptions.currentPlatform,
   );
