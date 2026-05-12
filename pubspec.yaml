@@ -77,14 +77,22 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 flutter_native_splash:
   color: "#082F46"
-  image: assets/goserve_official_logo.png
   android: true
   ios: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/logo/app_icon (1).png
+  adaptive_icon_background: assets/logo/app_icon_bg.png
+  adaptive_icon_foreground: assets/logo/app_icon (1).png
+  min_sdk_android: 21
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -114,6 +122,9 @@ flutter:
     - assets/search/no_search_result.png
     - assets/animations/Recycling Bin (2).json
     - assets/goserve_official_logo.png
+    - assets/logo/app_icon.png
+    - assets/logo/app_icon (1).png
+    - assets/logo/app_icon_bg.png
    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

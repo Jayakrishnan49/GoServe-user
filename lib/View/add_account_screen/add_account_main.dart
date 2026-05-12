@@ -128,7 +128,7 @@ import 'package:project_2/view/add_account_screen/add_account_top.dart';
 import 'package:project_2/widgets/loading_overlay.dart';
 import 'package:provider/provider.dart';
 
-class AddAccountMain extends StatelessWidget {
+class AddAccountMain extends StatelessWidget { 
   const AddAccountMain({super.key});
 
   @override

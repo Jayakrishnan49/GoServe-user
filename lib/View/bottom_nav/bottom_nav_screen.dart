@@ -45,7 +45,7 @@ class MainScreenWithNavigation extends StatelessWidget {
               margin: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [AppColors.primary, AppColors.primary.withValues(alpha: 0.8)],
+                  colors: [AppColors.primary, AppColors.primary.withValues(alpha: 0.7)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -64,9 +64,9 @@ class MainScreenWithNavigation extends StatelessWidget {
                 activeColor: AppColors.secondary,
                 iconSize: 26,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                duration: const Duration(milliseconds: 400),
-                tabBackgroundColor: AppColors.secondary.withValues(alpha: 0.2),
-                color: Colors.grey[300],
+                duration: const Duration(milliseconds: 500),
+                tabBackgroundColor: AppColors.secondary.withValues(alpha: 0.1),
+                color: AppColors.grey,
                 selectedIndex: navigationProvider.currentIndex,
                 onTabChange: (index) {
                   navigationProvider.setIndex(index);
@@ -89,3 +89,6 @@ class MainScreenWithNavigation extends StatelessWidget {
     );
   }
 }
+
+
+

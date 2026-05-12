@@ -65,10 +65,15 @@ class ProviderInfoCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header with name and badge
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Wrap(
+                      spacing: 12,
+  runSpacing: 12,
+  alignment: WrapAlignment.spaceBetween,
+                    crossAxisAlignment: WrapCrossAlignment.start,
                     children: [
-                      Expanded(
+                      SizedBox(
+                        // width: MediaQuery.of(context).size.width * .52,
+                        width: 220,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -116,12 +121,14 @@ class ProviderInfoCard extends StatelessWidget {
       ),
     ),
     const SizedBox(width: 8),
-    Text(
-      '$totalReviews reviews',
-      style: TextStyle(
-        fontSize: 14,
-        color: AppColors.hintText,
-        fontWeight: FontWeight.w500,
+    Flexible(
+      child: Text(
+        '$totalReviews reviews',
+        style: TextStyle(
+          fontSize: 14,
+          color: AppColors.hintText,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     ),
   ],
@@ -175,7 +182,7 @@ class ProviderInfoCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      // const SizedBox(width: 12),
                       // Service badge with modern styling
                       Container(
                         padding: const EdgeInsets.symmetric(

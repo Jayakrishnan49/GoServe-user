@@ -366,15 +366,11 @@
 
 
 
-
-
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:project_2/Constants/app_color.dart';
 import 'package:project_2/View/auth/login_screen/login_main.dart';
-import 'package:project_2/constants/app_color.dart';
 import 'package:project_2/controllers/user_provider/user_provider.dart';
 import 'package:project_2/view/add_account_screen/add_account_main.dart';
 import 'package:provider/provider.dart';
@@ -385,7 +381,6 @@ class SplashScreen extends StatelessWidget {
 
   void navigateUser(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 2));
-
     FlutterNativeSplash.remove();
 
     final user = FirebaseAuth.instance.currentUser;
@@ -411,104 +406,56 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Future.microtask(() => navigateUser(context));
     WidgetsBinding.instance.addPostFrameCallback((_) => navigateUser(context));
 
     return Scaffold(
-      backgroundColor: AppColors.primary,
-      body: Stack(
-        children: [
-
-          // subtle top-right glow
-          // Positioned(
-          //   top: -80,
-          //   right: -80,
-          //   child: Container(
-          //     width: 300,
-          //     height: 300,
-          //     decoration: const BoxDecoration(
-          //       shape: BoxShape.circle,
-          //       color: Colors.white10,
-          //     ),
-          //   ),
-          // ),
-
-          // subtle bottom-left glow
-          // Positioned(
-          //   bottom: -100,
-          //   left: -60,
-          //   child: Container(
-          //     width: 280,
-          //     height: 280,
-          //     decoration: const BoxDecoration(
-          //       shape: BoxShape.circle,
-          //       color: Colors.white10,
-          //     ),
-          //   ),
-          // ),
-
-          // Main content
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-
-                // Logo
-                Image.asset(
-                  'assets/logo/goserve_official_logo.png',
-                  width: 150,
-                  height: 150,
-                ),
-
-                const SizedBox(height: 10),
-
-                // App name
-                const Text(
-                  'GoServe',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    // fontFamily: 'DancingScript',
-                    letterSpacing: 1.5,
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                // Tagline
-                // Text(
-                //   'Connecting you with trusted professionals',
-                //   textAlign: TextAlign.center,
-                //   style: TextStyle(
-                //     fontSize: 14,
-                //     color: Colors.white.withOpacity(0.6),
-                //     letterSpacing: 0.5,
-                //   ),
-                // ),
-              ],
-            ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration:  BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              // AppColors.primary,
+              // // Color(0xFF0E7490),
+              // // AppColors.secondary,
+              // AppColors.primary.withOpacity(0.8)
+                    Color(0xFF082F46), // dark navy
+      Color(0xFF0E7490), // teal
+      Color(0xFF06B6D4),
+            ],
           ),
-
-          // Bottom loader
-          // Positioned(
-          //   bottom: 60,
-          //   left: 0,
-          //   right: 0,
-          //   child: Center(
-          //     child: SizedBox(
-          //       width: 24,
-          //       height: 24,
-          //       child: CircularProgressIndicator(
-          //         strokeWidth: 2.5,
-          //         valueColor: AlwaysStoppedAnimation<Color>(
-          //           Colors.white.withOpacity(0.5),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-        ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/goserve_official_logo.png',
+              width: 140,
+              height: 140,
+            ),
+            // const SizedBox(height: 10),
+            const Text(
+              'GoServe',
+              style: TextStyle(
+                fontSize: 38,
+                fontWeight: FontWeight.bold,
+                color: AppColors.secondary,
+                // fontFamily: 'DancingScript',
+                letterSpacing: 2.0,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Connecting you with trusted professionals',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.white.withOpacity(0.7),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
